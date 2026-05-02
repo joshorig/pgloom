@@ -57,13 +57,19 @@ def snapshot(*, database_url: str | None = None) -> dict[str, Any]:
                 """
             )
         ]
+        task_counts = counts("tasks")
+        workflow_counts = counts("workflows")
+        approval_counts = counts("approvals")
         data = {
-            "tasks_by_state": counts("tasks"),
-            "workflows_by_state": counts("workflows"),
+            "tasks": task_counts,
+            "tasks_by_state": task_counts,
+            "workflows": workflow_counts,
+            "workflows_by_state": workflow_counts,
             "workers": [
                 dict(row) for row in conn.execute("select * from workers order by id limit 50")
             ],
-            "approvals_by_state": counts("approvals"),
+            "approvals": approval_counts,
+            "approvals_by_state": approval_counts,
             "blockers": blockers,
             "recent_events": recent_events,
             "model_usage_24h": [
