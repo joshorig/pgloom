@@ -1,7 +1,7 @@
 # pgloom
 
-[![PyPI version](https://img.shields.io/pypi/v/pgloom.svg)](https://pypi.org/project/pgloom/)
-[![Python versions](https://img.shields.io/pypi/pyversions/pgloom.svg)](https://pypi.org/project/pgloom/)
+[![PyPI version](https://img.shields.io/pypi/v/pgloom.svg?cacheSeconds=300)](https://pypi.org/project/pgloom/)
+[![Python versions](https://img.shields.io/pypi/pyversions/pgloom.svg?cacheSeconds=300)](https://pypi.org/project/pgloom/)
 [![License](https://img.shields.io/github/license/joshorig/pgloom.svg)](LICENSE)
 [![CI](https://github.com/joshorig/pgloom/actions/workflows/ci.yml/badge.svg)](https://github.com/joshorig/pgloom/actions/workflows/ci.yml)
 
