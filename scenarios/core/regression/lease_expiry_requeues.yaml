@@ -1,0 +1,21 @@
+id: lease_expiry_requeues
+purpose: expired running task is safely requeued
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+    as: target
+  - action: claim
+    slot: fake
+    lease_seconds: 1
+    as: claimed
+  - action: expire_task_lease
+    task: claimed
+  - action: reap_expired_leases
+assertions:
+  - type: task_state_count
+    state: queued
+    count: 1
+  - type: event_type_count
+    event_type: task.lease_expired
+    count: 1

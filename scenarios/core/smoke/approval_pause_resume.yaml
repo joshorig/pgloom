@@ -1,0 +1,19 @@
+id: approval_pause_resume
+purpose: approval request pauses and resumes workflow
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+    payload:
+      behavior: approval
+  - action: run_once
+    slot: fake
+  - action: decide_pending_approval
+    approved: true
+assertions:
+  - type: task_state_count
+    state: queued
+    count: 1
+  - type: approval_state_count
+    state: approved
+    count: 1

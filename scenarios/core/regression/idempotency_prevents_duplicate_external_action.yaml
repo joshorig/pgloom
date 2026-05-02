@@ -1,0 +1,14 @@
+id: idempotency_prevents_duplicate_external_action
+purpose: duplicate side effect is prevented
+steps:
+  - action: record_external_action
+    idempotency_key: scenario-action
+    action_type: fake
+  - action: record_external_action
+    idempotency_key: scenario-action
+    action_type: fake
+    expect_duplicate: true
+assertions:
+  - type: flag
+    name: duplicate_prevented
+    value: true

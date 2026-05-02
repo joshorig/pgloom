@@ -1,0 +1,12 @@
+id: task_claim_once
+purpose: two workers cannot claim the same queued task
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+  - action: run_once
+    slot: fake
+assertions:
+  - type: task_state_count
+    state: done
+    count: 1

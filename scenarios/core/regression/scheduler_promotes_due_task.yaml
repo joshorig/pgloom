@@ -1,0 +1,16 @@
+id: scheduler_promotes_due_task
+purpose: scheduler tick reports due queued tasks
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+    as: target
+  - action: set_task_run_after
+    task_ref: target
+    seconds_offset: -1
+  - action: scheduler_tick
+    slot: fake
+assertions:
+  - type: flag
+    name: scheduler_due_count
+    value: true

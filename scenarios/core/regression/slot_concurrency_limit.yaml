@@ -1,0 +1,27 @@
+id: slot_concurrency_limit
+purpose: configured slot concurrency caps in-flight claims
+steps:
+  - action: upsert_slot
+    name: cap1
+    concurrency: 1
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: cap1
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: cap1
+  - action: claim
+    slot: cap1
+  - action: claim
+    slot: cap1
+    as: second_claim
+assertions:
+  - type: task_state_count
+    state: leased
+    count: 1
+  - type: task_state_count
+    state: queued
+    count: 1
+  - type: flag
+    name: second_claim_blocked
+    value: true

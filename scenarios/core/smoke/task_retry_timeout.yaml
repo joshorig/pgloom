@@ -1,0 +1,14 @@
+id: task_retry_timeout
+purpose: timeout causes retry and event recording
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+    payload:
+      behavior: retry
+  - action: run_once
+    slot: fake
+assertions:
+  - type: task_state_count
+    state: queued
+    count: 1

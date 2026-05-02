@@ -1,0 +1,27 @@
+id: budget_exhaustion_blocks_model_task
+purpose: model budget policy works with fake provider
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+    as: target
+  - action: record_model_usage
+    task: target
+    profile_name: fake
+    input_tokens: 10
+    output_tokens: 2
+    cost_usd: 1.25
+  - action: upsert_quota
+    name: model_budget
+    capacity: 1
+    remaining: 0
+  - action: consume_quota
+    name: model_budget
+    amount: 1
+    flag: budget_allowed
+assertions:
+  - type: model_usage_count
+    count: 1
+  - type: flag
+    name: budget_allowed
+    value: false

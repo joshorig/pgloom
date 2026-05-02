@@ -1,0 +1,17 @@
+id: health_blocks_dispatch
+purpose: blocking health check prevents dispatch
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+  - action: record_health_check
+    name: dispatch
+    status: failed
+    blocks_dispatch: true
+  - action: run_once
+    slot: fake
+  - action: clear_health_checks
+assertions:
+  - type: task_state_count
+    state: queued
+    count: 1

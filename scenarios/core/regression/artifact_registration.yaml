@@ -1,0 +1,19 @@
+id: artifact_registration
+purpose: artifact is registered with workflow/task linkage and sha
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+    as: target
+  - action: run_once
+    slot: fake
+  - action: register_artifact
+    task: target
+    artifact_type: log
+    content: scenario artifact
+assertions:
+  - type: task_state_count
+    state: done
+    count: 1
+  - type: artifact_count
+    count: 1

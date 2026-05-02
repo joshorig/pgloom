@@ -1,0 +1,24 @@
+id: dependency_unblocks_child
+purpose: dependent task queues only after dependency completes
+steps:
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+    as: parent
+  - action: enqueue_task
+    task_type: fake.complete
+    slot: fake
+    as: child
+    depends_on:
+      - parent
+  - action: run_once
+    slot: fake
+  - action: run_once
+    slot: fake
+assertions:
+  - type: task_state_count
+    state: done
+    count: 2
+  - type: event_type_count
+    event_type: task.dependency_unblocked
+    count: 1
