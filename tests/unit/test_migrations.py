@@ -17,8 +17,12 @@ def test_memory_and_blocker_migrations_exist() -> None:
     blocker_sql = (
         resources.files("pgloom.db.schema").joinpath("006_blocker_registry.sql").read_text()
     )
+    token_savings_sql = (
+        resources.files("pgloom.db.schema").joinpath("007_token_savings.sql").read_text()
+    )
     assert "memory_entries" in memory_sql
     assert "blocker_codes" in blocker_sql
+    assert "token_savings" in token_savings_sql
 
 
 def test_blocker_registry_round_trip(database_url: str) -> None:

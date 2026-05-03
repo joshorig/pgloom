@@ -31,6 +31,7 @@ def database_url() -> Iterator[str]:
               scenario_runs,
               memory_entries,
               blocker_codes,
+              token_savings,
               resource_locks,
               quota_buckets,
               external_actions,

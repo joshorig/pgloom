@@ -24,6 +24,7 @@ REQUIRED_TABLES = {
     "scenario_assertions",
     "memory_entries",
     "blocker_codes",
+    "token_savings",
 }
 
 

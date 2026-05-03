@@ -10,6 +10,7 @@ import pytest
 from pgloom.approvals import decide_approval, expire_pending_approvals, request_approval
 from pgloom.artifacts import register_artifact
 from pgloom.cli import db_check, health_run, reaper_run
+from pgloom.context import TokenSavingsRecord, record_token_savings, summarize_token_savings
 from pgloom.dashboard import snapshot
 from pgloom.db.postgres import connect
 from pgloom.exceptions import DuplicateExternalActionError
@@ -650,3 +651,34 @@ def test_worker_lifecycle(database_url: str) -> None:
         conn.execute("update workers set last_heartbeat_at = now() - interval '10 seconds'")
         assert list_active(conn, slot="life", stale_after_seconds=1) == []
         assert deregister_worker(conn, worker_id="worker-life")
+
+
+def test_token_savings_ledger_round_trip(database_url: str) -> None:
+    workflow = create_workflow(domain="test", name="token-savings", database_url=database_url)
+    task = enqueue_task(
+        workflow_id=workflow["id"],
+        domain="test",
+        task_type="fake.complete",
+        slot="tokens",
+        database_url=database_url,
+    )
+    row = record_token_savings(
+        TokenSavingsRecord(
+            scope_id="feature-1",
+            workflow_id=workflow["id"],
+            task_id=task["id"],
+            profile_name="fake",
+            input_tokens_original=100,
+            input_tokens_after=40,
+            tokens_saved=60,
+            reduction_ratio=0.6,
+            estimated_cost_saved_usd=0.001,
+            metadata={"method": "unit", "role": "test"},
+        ),
+        database_url=database_url,
+    )
+
+    assert row["scope_id"] == "feature-1"
+    summary = summarize_token_savings("feature-1", database_url=database_url)
+    assert summary["tokens_saved"] == 60
+    assert summary["reduction_ratio"] == 0.6
